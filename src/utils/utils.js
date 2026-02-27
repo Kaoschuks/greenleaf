@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 function generateCode(length = 5) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -17,4 +18,8 @@ function getCurrentDate() {
   return now.toISOString().split('T')[0];
 }
 
-module.exports = {generateCode, getCurrentDateTime, getCurrentDate};
+async function compareHash(input, hashed) {
+  return await bcrypt.compare(input, hashed);
+}
+
+module.exports = {generateCode, getCurrentDateTime, getCurrentDate, compareHash};

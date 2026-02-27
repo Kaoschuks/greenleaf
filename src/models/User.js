@@ -1,5 +1,6 @@
-const bcrypt = require('bcryptjs');
+
 const generateReferralCode = require('../utils/utils');
+const compareHash = require('../utils/utils')
 
 class User {
 
@@ -35,7 +36,7 @@ class User {
   }
 
   async validatePassword(password, hashedPassword) {
-    return await bcrypt.compare(password, hashedPassword);
+    return await compareHash(password,hashedPassword);
   }
 
   async findById(id) {

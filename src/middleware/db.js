@@ -9,4 +9,10 @@ const dbMiddleware = async (req, res, next) => {
   next();
 };
 
+// Export function to get database pool directly
+function getDb() {
+  return pool;
+}
+
 module.exports = dbMiddleware;
+module.exports.getDb = getDb;

@@ -1,0 +1,3461 @@
+{
+  "info": {
+    "_postman_id": "da329f25-1b14-4b08-89b6-6474c09a7a39",
+    "name": "Insurance API",
+    "description": "STI API Documentation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "6777605"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Agents",
+          "item": [
+            {
+              "name": "Register Copy",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (!(environment.isIntegrationTest)) {",
+                      "var responseJSON = JSON.parse(responseBody);",
+                      "",
+                      "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                      "",
+                      "var user = responseJSON.user || {};",
+                      "",
+                      "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                      "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                      "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                      "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                      "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                      "}",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "X-Requested-With",
+                    "value": "XMLHttpRequest"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\t\"user\":{\n\t\t\"first_name\":\"Noibi\",\n\t\t\"last_name\":\"Kazeeeem\",\n\t\t\"email\":\"kazeeeeem.noioobi@techadvance.ng\",\n\t\t\"password\":\"password12\", \n\t\t\"phone\":\"07036800028381\",\n\t\t\"gender\":\"Male\",\n\t\t\"address\":\"12 Adeoti Street\",\n\t\t\"date_of_birth\":\"12-09-1991\",\n\t\t\"bvn\":\"22989765432\",\n\t\t\"identification\":\"https://i1.wp.com/www.360nobs.com/wp-content/uploads/2018/04/Passport-Scarcity-Hits-Nigeria-As-FG-Reviews-Production-Contract.png?resize=640%2C431&ssl=1\",\n\t\t\"document\":\"https://i1.wp.com/www.360nobs.com/wp-content/uploads/2018/04/Passport-Scarcity-Hits-Nigeria-As-FG-Reviews-Production-Contract.png?resize=640%2C431&ssl=1\"\n\t\t}\n}"
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/users/agent",
+                  "host": [
+                    "{{apiUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "agent"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": {\n        \"email\": \"{{email}}\",\n        \"password\": \"{{password}}\"\n    }\n}"
+            },
+            "url": {
+              "raw": "http://206.189.119.166:8040/api/users/login",
+              "protocol": "http",
+              "host": [
+                "206",
+                "189",
+                "119",
+                "166"
+              ],
+              "port": "8040",
+              "path": [
+                "api",
+                "users",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login and Remember Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "",
+                  "if(tests['User has \"token\" property']){",
+                  "    postman.setEnvironmentVariable('token', user.token);",
+                  "}",
+                  "",
+                  "tests['Environment variable \"token\" has been set'] = environment.token === user.token;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"email\":\"{{EMAIL}}\", \"password\":\"{{PASSWORD}}\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/users/login",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "users",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"user\":{\n\t\t\"first_name\":\"Noibi\",\n\t\t\"last_name\":\"Kazeeeem\",\n\t\t\"email\":\"kazeem.noibi@techadvance.ng\",\n\t\t\"password\":\"password12\", \n\t\t\"phone\":\"07039828381\"\n\t\t}\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/users",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Set Pin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"pin\":\"7969\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/set-pin",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "set-pin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Pin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"old_pin\":\"7969\", \"pin\":\"7038\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/change-pin",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "change-pin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"old_password\":\"password12\", \"new_password\":\"noheeb12\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/change-password",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Initiate Password Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"email\":\"noibilism@gmail.com\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/users/initiate-password",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "users",
+                "initiate-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"email\":\"noibilism@gmail.com\",\"token\":\"0938177930\", \"new_password\":\"noheeb12\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/users/update-password",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "users",
+                "update-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Picture",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVFVEes7fhW3S_N3mvxCg8xeX2-fi_qolNS8g-4qqDJUZf5VZGVQ\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/user/change-picture",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "user",
+                "change-picture"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Current User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/user",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot PIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/forgot-pin",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "forgot-pin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Notifications",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/notifications",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":\n{\"email\":\"{{EMAIL}}\",\n\"phone\":\"07039828381\",\n\"password\":\"password122\",\n\"username\":\"boda_kazeem\",\n\"first_name\":\"kazeem\",\n\"last_name\":\"Noibi\"\n}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/user",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Wallets",
+      "item": [
+        {
+          "name": "Create Wallet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"article\":{\"title\":\"How to train your dragon\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"dragons\",\"training\"]}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/wallet",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "wallet"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Fund Wallet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"amount\":10000,\n\t\"description\":\"Funding\",\n\t\"transaction_type\":\"CREDIT\",\n\t\"wallet_uid\":\"8a3624ef84e942e69cd50b740d22816d\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/fund-wallet",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "fund-wallet"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Bank Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"account_number\":\"0035889172\",\n\t\"bank_code\":\"058\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/verify-bank-account",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "verify-bank-account"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Transaction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"amount\":\"5000\",\n\t\"user_id\":\"67\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/start-transaction",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "start-transaction"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Transaction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"reference\":\"1545175414P3990N2947\",\n\t\"provider_reference\":\"12121jsjdskj\",\n\t\"status\":\"Success\",\n\t\"policy_type\":\"vehicle\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/update-transaction",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "update-transaction"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Debit Wallet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"amount\":7300,\n\t\"description\":\"Withdrawal\",\n\t\"transaction_type\":\"DEBIT\",\n\t\"wallet_uid\":\"8a3624ef84e942e69cd50b740d22816d\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/debit-wallet",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "debit-wallet"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Wallet History",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"article\":{\"title\":\"How to train your dragon\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"dragons\",\"training\"]}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/wallet-history",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "wallet-history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Transaction History",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"article\":{\"title\":\"How to train your dragon\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"dragons\",\"training\"]}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/transaction-history",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "transaction-history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Wallet Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"article\":{\"title\":\"How to train your dragon\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"dragons\",\"training\"]}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/wallet-details",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "wallet-details"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Payout History",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"article\":{\"title\":\"How to train your dragon\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"dragons\",\"training\"]}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/payout-history",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "payout-history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Banks",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"article\" property'] = responseJSON.hasOwnProperty('article');",
+                  "",
+                  "var article = responseJSON.article || {};",
+                  "",
+                  "tests['Article has \"title\" property'] = article.hasOwnProperty('title');",
+                  "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                  "tests['Article has \"body\" property'] = article.hasOwnProperty('body');",
+                  "tests['Article has \"createdAt\" property'] = article.hasOwnProperty('createdAt');",
+                  "tests['Article\\'s \"createdAt\" property is an ISO 8601 timestamp'] = new Date(article.createdAt).toISOString() === article.createdAt;",
+                  "tests['Article has \"updatedAt\" property'] = article.hasOwnProperty('updatedAt');",
+                  "tests['Article\\'s \"updatedAt\" property is an ISO 8601 timestamp'] = new Date(article.updatedAt).toISOString() === article.updatedAt;",
+                  "tests['Article has \"description\" property'] = article.hasOwnProperty('description');",
+                  "tests['Article has \"tagList\" property'] = article.hasOwnProperty('tagList');",
+                  "tests['Article\\'s \"tagList\" property is an Array'] = Array.isArray(article.tagList);",
+                  "tests['Article has \"author\" property'] = article.hasOwnProperty('author');",
+                  "tests['Article has \"favorited\" property'] = article.hasOwnProperty('favorited');",
+                  "tests['Article has \"favoritesCount\" property'] = article.hasOwnProperty('favoritesCount');",
+                  "tests['favoritesCount is an integer'] = Number.isInteger(article.favoritesCount);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"article\":{\"title\":\"How to train your dragon\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"dragons\",\"training\"]}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/list-banks",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "list-banks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send PIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"username\":\"dare\", \"pin\":\"7967\", \"phone\":\"07038808765\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/set-username",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "set-username"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Profiles",
+      "item": [
+        {
+          "name": "Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "    tests['Response contains \"profile\" property'] = responseJSON.hasOwnProperty('profile');",
+                  "    ",
+                  "    var profile = responseJSON.profile || {};",
+                  "    ",
+                  "    tests['Profile has \"username\" property'] = profile.hasOwnProperty('username');",
+                  "    tests['Profile has \"bio\" property'] = profile.hasOwnProperty('bio');",
+                  "    tests['Profile has \"image\" property'] = profile.hasOwnProperty('image');",
+                  "    tests['Profile has \"following\" property'] = profile.hasOwnProperty('following');",
+                  "}",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/profiles/kay_",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "profiles",
+                "kay_"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Follow Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "    tests['Response contains \"profile\" property'] = responseJSON.hasOwnProperty('profile');",
+                  "    ",
+                  "    var profile = responseJSON.profile || {};",
+                  "    ",
+                  "    tests['Profile has \"username\" property'] = profile.hasOwnProperty('username');",
+                  "    tests['Profile has \"bio\" property'] = profile.hasOwnProperty('bio');",
+                  "    tests['Profile has \"image\" property'] = profile.hasOwnProperty('image');",
+                  "    tests['Profile has \"following\" property'] = profile.hasOwnProperty('following');",
+                  "    tests['Profile\\'s \"following\" property is true'] = profile.following === true;",
+                  "}",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"email\":\"{{EMAIL}}\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/profiles/rick/follow",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "profiles",
+                "rick",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Profile Favorites",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "    tests['Response contains \"profile\" property'] = responseJSON.hasOwnProperty('profile');",
+                  "    ",
+                  "    var profile = responseJSON.profile || {};",
+                  "    ",
+                  "    tests['Profile has \"username\" property'] = profile.hasOwnProperty('username');",
+                  "    tests['Profile has \"bio\" property'] = profile.hasOwnProperty('bio');",
+                  "    tests['Profile has \"image\" property'] = profile.hasOwnProperty('image');",
+                  "    tests['Profile has \"following\" property'] = profile.hasOwnProperty('following');",
+                  "    tests['Profile\\'s \"following\" property is true'] = profile.following === true;",
+                  "}",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"interests\":[\n\t\"Manchester United\", \"Chelsea\"\n\t]}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/profile/favorites",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "profile",
+                "favorites"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "    tests['Response contains \"profile\" property'] = responseJSON.hasOwnProperty('profile');",
+                  "    ",
+                  "    var profile = responseJSON.profile || {};",
+                  "    ",
+                  "    tests['Profile has \"username\" property'] = profile.hasOwnProperty('username');",
+                  "    tests['Profile has \"bio\" property'] = profile.hasOwnProperty('bio');",
+                  "    tests['Profile has \"image\" property'] = profile.hasOwnProperty('image');",
+                  "    tests['Profile has \"following\" property'] = profile.hasOwnProperty('following');",
+                  "    tests['Profile\\'s \"following\" property is true'] = profile.following === true;",
+                  "}",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":{\"email\":\"{{EMAIL}}\"}}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/profiles/search",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "profiles",
+                "search"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unfollow Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "    tests['Response contains \"profile\" property'] = responseJSON.hasOwnProperty('profile');",
+                  "    ",
+                  "    var profile = responseJSON.profile || {};",
+                  "    ",
+                  "    tests['Profile has \"username\" property'] = profile.hasOwnProperty('username');",
+                  "    tests['Profile has \"bio\" property'] = profile.hasOwnProperty('bio');",
+                  "    tests['Profile has \"image\" property'] = profile.hasOwnProperty('image');",
+                  "    tests['Profile has \"following\" property'] = profile.hasOwnProperty('following');",
+                  "    tests['Profile\\'s \"following\" property is false'] = profile.following === false;",
+                  "}",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/profiles/rick/follow",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "profiles",
+                "rick",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Policies",
+      "item": [
+        {
+          "name": "My Policies",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "    ",
+                  "    tests['Response contains \"tags\" property'] = responseJSON.hasOwnProperty('tags');",
+                  "    tests['\"tags\" property returned as array'] = Array.isArray(responseJSON.tags);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://188.166.153.239:8040/api/agents/policies",
+              "protocol": "http",
+              "host": [
+                "188",
+                "166",
+                "153",
+                "239"
+              ],
+              "port": "8040",
+              "path": [
+                "api",
+                "agents",
+                "policies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Policies",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "    ",
+                  "    tests['Response contains \"tags\" property'] = responseJSON.hasOwnProperty('tags');",
+                  "    tests['\"tags\" property returned as array'] = Array.isArray(responseJSON.tags);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://188.166.153.239:8040/api/policies",
+              "protocol": "http",
+              "host": [
+                "188",
+                "166",
+                "153",
+                "239"
+              ],
+              "port": "8040",
+              "path": [
+                "api",
+                "policies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My Claims",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "    ",
+                  "    tests['Response contains \"tags\" property'] = responseJSON.hasOwnProperty('tags');",
+                  "    tests['\"tags\" property returned as array'] = Array.isArray(responseJSON.tags);",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/my-claims",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "my-claims"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vehicle Brands",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "    ",
+                  "    tests['Response contains \"tags\" property'] = responseJSON.hasOwnProperty('tags');",
+                  "    tests['\"tags\" property returned as array'] = Array.isArray(responseJSON.tags);",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/vehicle-brands",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "vehicle-brands"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vehicle Brand Types",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "    ",
+                  "    tests['Response contains \"tags\" property'] = responseJSON.hasOwnProperty('tags');",
+                  "    tests['\"tags\" property returned as array'] = Array.isArray(responseJSON.tags);",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/my-claims",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "my-claims"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Make Claim",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\t\"description\":\"Policy\",\n\t\t\"claim_type\":\"vehicle\",\n\t\t\"payment_status\":\"Pending\",\n\t\t\"policy_number\":\"MOT/CV/09/19/SA/00382\",\n\t\t\"loss_estimate\":20000000,\n\t\t\"cost_estimate\":10000000,\n\t\t\"pictures\":[\"http://res.cloudinary.com/demo/image/upload/multiple/folders/sample.jpg\",\"http://res.cloudinary.com/demo/image/upload/multiple/folders/sample.jpg\",\"http://res.cloudinary.com/demo/image/upload/multiple/folders/sample.jpg\"],\n\t\t\"pin\":\"7038\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/make-claim",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "make-claim"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Track Claim",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\t\"claim_number\":\"MOT/CV/03/19/SA/00146/2019/C00001\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/track-claim",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "track-claim"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Vehicle Policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\n\t\t\"persona\":{\n\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\"last_name\":\"Kazeem\",\n\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\"house_address\":\"Lagos\",\n\t\t\t\t\t\"account_number\":\"STI/1009/0001\",\n\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"identification_means\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"next_of_kin\":\"Wale\",\n\t\t\t\t\t\"next_of_kin_phone\":\"08076130237\",\n\t\t\t\t\t\"next_of_kin_address\":\"21 Adeogun Street, Ikorodu\",\n\t\t\t\t\t\"employer\":\"Facebook\",\n\t\t\t\t\t\"employer_address\":\"Abuja\",\n\t\t\t\t\t\"customer_type\":\"1\",\n\t\t\t\t\t\"company_name\": null,\n\t\t\t\t\t\"mailing_address\":\"Ikoyi, Lagos\",\n\t\t\t\t\t\"tin_number\":\"TIN-10029\",\n\t\t\t\t\t\"office_address\":\"Ikoyi, Lagos\",\n\t\t\t\t\t\"contact_person\":\"Biola Adeola\"\n\t\t\t\t},\n\t\t\"vehicle\":[\n\t\t\t\t\t{\n\t\t\t\t\t\"period\":\"12 Months\",\n\t\t\t\t\t\"policy_type\":\"Third_party\",\n\t\t\t\t\t\"enhanced_third_party\":\"third_party_only\",\n\t\t\t\t\t\"private_commercial\":\"private\", \n\t\t\t\t\t\"motor_cycle_policy\":null,\n\t\t\t\t\t\"make\":\"Toyota\",\n\t\t\t\t\t\"body_type\":\"SUV\",\n\t\t\t\t\t\"year\":\"2017\",\n\t\t\t\t\t\"home_address\":\"Lagos\",\n\t\t\t\t\t\"registration_number\":\"KSF575CZ\",\n\t\t\t\t\t\"chasis_number\":\"VTI121092920920920\",\n\t\t\t\t\t\"engine_number\":\"TYT09290921091229120\",\n\t\t\t\t\t\"vehicle_value\":\"1200000.90\",\n\t\t\t\t\t\"pictures\":[\n\t\t\t\t\t\t\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\"\n\t\t\t\t\t\t]\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\"period\":\"12 Months\",\n\t\t\t\t\t\"policy_type\":\"Third_party\",\n\t\t\t\t\t\"enhanced_third_party\":\"third_party_only\",\n\t\t\t\t\t\"private_commercial\":\"private\", \n\t\t\t\t\t\"motor_cycle_policy\":null,\n\t\t\t\t\t\"make\":\"Toyota\",\n\t\t\t\t\t\"body_type\":\"SUV\",\n\t\t\t\t\t\"year\":\"2017\",\n\t\t\t\t\t\"home_address\":\"Lagos\",\n\t\t\t\t\t\"registration_number\":\"KSF575CZ\",\n\t\t\t\t\t\"chasis_number\":\"VTI121092920920920\",\n\t\t\t\t\t\"engine_number\":\"TYT09290921091229120\",\n\t\t\t\t\t\"vehicle_value\":\"1200000.90\",\n\t\t\t\t\t\"pictures\":[\n\t\t\t\t\t\t\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\"\n\t\t\t\t\t\t]\n\t\t\t\t\t}\n\t\t\t\t],\n\t\t\"quote_price\":\"120000\",\n\t\t\"pin\":\"7038\",\n\t\t\"payment_source\":\"paystack\",\n\t\t\"user_id\":\"9\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/buy-vehicle-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "buy-vehicle-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Marine Policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\n\t\t\"persona\":{\n\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\"last_name\":\"Kazeem\",\n\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\"house_address\":\"Lagos\",\n\t\t\t\t\t\"account_number\":\"STI/1009/0001\",\n\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"identification_means\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"next_of_kin\":\"Wale\",\n\t\t\t\t\t\"next_of_kin_phone\":\"08076130237\",\n\t\t\t\t\t\"next_of_kin_address\":\"21 Adeogun Street, Ikorodu\",\n\t\t\t\t\t\"employer\":\"Facebook\",\n\t\t\t\t\t\"employer_address\":\"Abuja\",\n\t\t\t\t\t\"customer_type\":\"1\",\n\t\t\t\t\t\"company_name\": null,\n\t\t\t\t\t\"mailing_address\":\"Ikoyi, Lagos\",\n\t\t\t\t\t\"tin_number\":\"TIN-10029\",\n\t\t\t\t\t\"office_address\":\"Ikoyi, Lagos\",\n\t\t\t\t\t\"contact_person\":\"Biola Adeola\"\n\t\t\t\t},\n\t\t\"cargoes\":[\n\t\t\t\t\t{\n\t\t\t\t\t\"period\":\"12 Months\",\n\t\t\t\t\t\"policy_type\":\"Marine\",\n\t\t\t\t\t\"description\":\"description\",\n\t\t\t\t\t\"pfi_number\":\"1212121\", \n\t\t\t\t\t\"pfi_date\":\"2019-12-12\",\n\t\t\t\t\t\"quantity\":\"1\",\n\t\t\t\t\t\"value\":\"20000000\",\n\t\t\t\t\t\"conversion_rate\":\"356.50\",\n\t\t\t\t\t\"loading_port\":\"Vegas\",\n\t\t\t\t\t\"discharge_port\":\"Lagos\",\n\t\t\t\t\t\"conveyance_mode\":\"Air\",\n\t\t\t\t\t\"price\":\"1200000.90\",\n\t\t\t\t\t\"pictures\":[\n\t\t\t\t\t\t\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\"\n\t\t\t\t\t\t]\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\"period\":\"12 Months\",\n\t\t\t\t\t\"policy_type\":\"Marine\",\n\t\t\t\t\t\"description\":\"description\",\n\t\t\t\t\t\"pfi_number\":\"1212121\", \n\t\t\t\t\t\"pfi_date\":\"2019-12-12\",\n\t\t\t\t\t\"quantity\":\"1\",\n\t\t\t\t\t\"value\":\"20000000\",\n\t\t\t\t\t\"conversion_rate\":\"356.50\",\n\t\t\t\t\t\"loading_port\":\"Vegas\",\n\t\t\t\t\t\"discharge_port\":\"Lagos\",\n\t\t\t\t\t\"conveyance_mode\":\"Air\",\n\t\t\t\t\t\"price\":\"1200000.90\",\n\t\t\t\t\t\"pictures\":[\n\t\t\t\t\t\t\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\"\n\t\t\t\t\t\t]\n\t\t\t\t\t}\n\t\t\t\t],\n\t\t\"quote_price\":\"1200000.90\",\n\t\t\"pin\":\"7038\",\n\t\t\"payment_source\":\"paystack\",\n\t\t\"user_id\":\"9\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/buy-marine-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "buy-marine-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Swiss Policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\n\t\t\"persona\":{\n\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\"last_name\":\"Kazeem\",\n\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\"date_of_birth\":\"1998-04-19\", \n\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\"house_address\":\"Lagos\",\n\t\t\t\t\t\"account_number\":\"STI/1009/0001\",\n\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"next_of_kin\":\"Wale\",\n\t\t\t\t\t\"next_of_kin_phone\":\"08076130237\",\n\t\t\t\t\t\"next_of_kin_address\":\"21 Adeogun Street, Ikorodu\",\n\t\t\t\t\t\"disability\":\"Impaired Speech\",\n\t\t\t\t\t\"additional_insured\":[\n\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"last_name\":\"Idris\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\t\t\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"date_of_birth\":\"2011-09-19\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"disability\":null\n\t\t\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"last_name\":\"Idris\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\t\t\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"date_of_birth\":\"2011-09-19\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"disability\":null\n\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\"swiss\":{\n\t\t\t\t\t\"period\":\"12 Months\"\n\t\t\t\t},\n\t\t\"quote_price\":\"120000\",\n\t\t\"pin\":\"7038\",\n\t\t\"payment_source\":\"paystack\",\n\t\t\"user_id\":\"9\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/buy-swiss-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "buy-swiss-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vehicle Quote",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"vehicle_value\":\"22222\",\"private_commercial\":\"private\",\"third_party_type\":\"third_party_only\",\"policy_type\":\"third_party\",\"vehicle_type\":\"SUV\"}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/get-vehicle-quote",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "get-vehicle-quote"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Swiss Quote",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"date_of_birth\":\"1987-09-12\"}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/get-swiss-quote",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "get-swiss-quote"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Marine Quote",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"value\":\"1980000\",\n\t\"conversion_rate\":356\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/get-marine-quote",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "get-marine-quote"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Renew Vehicle Policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\t\"policy_number\":\"2018/12/MB/0007\",\n\t\t\"payment_amount\":\"5000\",\n\t\t\"payment_mode\":\"paystack\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/renew-vehicle-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "renew-vehicle-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy All Risk Policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"persona\": {\n\t\t\"customer_type\" : \"1\",\n\t\t\"title\" : \"Mr.\",\n\t\t\"first_name\" : \"Chima\",\n\t\t\"last_name\" : \"Doe\",\n\t\t\"company_name\" : \"Doe & Sons\",\n\t\t\"email\" : \"chima@example.com\",\n\t\t\"account_number\" : \"0711347741\",\n\t\t\"phone\" : \"08011225532\",\n\t\t\"gender\" : \"Male\",\n\t\t\"house_address\" : \"address\",\n\t\t\"office_address\" : \"address\",\n\t\t\"mailing_address\" : \"address\",\n\t\t\"next_of_kin\" : \"Sarah Doe\",\n\t\t\"contact_person\" : \"Ofodile Mike\",\n\t\t\"picture\" : \"link\"\n\t},\n\t\"payment_source\" : \"paystack\",\n\t\"quote_price\" : \"2000\",\n\t\"pin\" : \"7083\",\n\t\"total_items\" : 1,\n\t\"items\" :\n\t\t[\n\t\t\t{\n\t\t\t\t\"item\" : \"Playstation 4\",\n\t\t\t\t\"value\" : \"1 million\",\n\t\t\t\t\"period\" : \"2 days\",\n\t\t\t\t\"receipt\" : \"link\",\n\t\t\t\t\"serial\":\"2121212121\",\n\t\t\t\t\"imei\":\"1212121212\"\n\t\t\t}\n\t\t]\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/buy-all-risk-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "buy-all-risk-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Gell All Risk Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"sum_insured\" : 2000\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/get-all-risk-quote",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "get-all-risk-quote"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Travel Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/get-travel-quote",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "get-travel-quote"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Travel Policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"persona\": {\n\t\t\"title\" : \"Mr.\",\n\t\t\"first_name\" : \"Francis\",\n\t\t\"last_name\" : \"Doe\",\n\t\t\"email\" : \"francis@example.com\",\n\t\t\"account_number\" : \"0711647741\",\n\t\t\"phone\" : \"08011225533\",\n\t\t\"gender\" : \"Male\",\n\t\t\"house_address\" : \"address\",\n\t\t\"employer\" : \"concept\",\n\t\t\"employer_address\" : \"address\",\n\t\t\"employer_phone\" : \"08012346785\",\n\t\t\"employer_email\" : \"test@test.com\",\n\t\t\"cover_commencement_date\" : \"2018-12-23\",\n\t\t\"picture\" : \"link\",\n\t\t\"next_of_kin\" : \"Jane Doe\",\n\t\t\"next_of_kin_address\" : \"address\",\n\t\t\"next_of_kin_phone\" : \"08012345678\",\n\t\t\"identification_means\" : \"ID Card\"\n\t},\n\t\"payment_source\" : \"wallet\",\n\t\"quote_price\" : \"2000\",\n\t\"pin\" : \"7083\",\n\t\"trip\" :\n\t\t{\n\t\t\t\"trip_duration\" : \"2 weeks\",\n\t\t\t\"travel_mode\" : \"Road\",\n\t\t\t\"disability\" : \"Yes\",\n\t\t\t\"disability_details\" : \"some description\",\n\t\t\t\"place_departure\" : \"enugu\",\n\t\t\t\"place_arrival\" : \"lagos\",\n\t\t\t\"address_country_of_visit\" : \"address\"\n\t\t}\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/buy-travel-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "buy-travel-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get NIID Policy Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\n\t\t\"policy_number\":\"LSR609EY\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/get-niid-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "get-niid-policy"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Static Contents",
+      "item": [
+        {
+          "name": "Contact Information",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "    ",
+                  "    tests['Response contains \"tags\" property'] = responseJSON.hasOwnProperty('tags');",
+                  "    tests['\"tags\" property returned as array'] = Array.isArray(responseJSON.tags);",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/article_by_category/1",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "article_by_category",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "FAQ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "    ",
+                  "    tests['Response contains \"tags\" property'] = responseJSON.hasOwnProperty('tags');",
+                  "    tests['\"tags\" property returned as array'] = Array.isArray(responseJSON.tags);",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/article_by_category/2",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "article_by_category",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Agents",
+      "item": [
+        {
+          "name": "My Policies",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "    ",
+                  "    tests['Response contains \"tags\" property'] = responseJSON.hasOwnProperty('tags');",
+                  "    tests['\"tags\" property returned as array'] = Array.isArray(responseJSON.tags);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiUrl}}/agents/policies",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "agents",
+                "policies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My Customers",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var is200Response = responseCode.code === 200;",
+                  "",
+                  "tests['Response code is 200 OK'] = is200Response;",
+                  "",
+                  "if(is200Response){",
+                  "    var responseJSON = JSON.parse(responseBody);",
+                  "    ",
+                  "    tests['Response contains \"tags\" property'] = responseJSON.hasOwnProperty('tags');",
+                  "    tests['\"tags\" property returned as array'] = Array.isArray(responseJSON.tags);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiUrl}}/agents/customers",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "agents",
+                "customers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Swiss Policy by Agent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\n\t\t\"persona\":{\n\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\"last_name\":\"Kazeem\",\n\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\"date_of_birth\":\"1998-04-19\", \n\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\"house_address\":\"Lagos\",\n\t\t\t\t\t\"account_number\":\"STI/1009/0001\",\n\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"next_of_kin\":\"Wale\",\n\t\t\t\t\t\"next_of_kin_phone\":\"08076130237\",\n\t\t\t\t\t\"next_of_kin_address\":\"21 Adeogun Street, Ikorodu\",\n\t\t\t\t\t\"disability\":\"Impaired Speech\",\n\t\t\t\t\t\"additional_insured\":[\n\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"last_name\":\"Idris\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\t\t\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"date_of_birth\":\"2011-09-19\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"disability\":null\n\t\t\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"last_name\":\"Idris\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\t\t\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"date_of_birth\":\"2011-09-19\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\t\t\t\t\t\t\t\"disability\":null\n\t\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t},\n\t\t\"swiss\":{\n\t\t\t\t\t\"period\":\"12 Months\"\n\t\t\t\t},\n\t\t\"quote_price\":\"120000\",\n\t\t\"pin\":\"7038\",\n\t\t\"payment_source\":\"paystack\",\n\t\t\"user_id\":\"9\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/agents/buy-swiss-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "agents",
+                "buy-swiss-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Vehicle Policy by Agent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\n\t\t\"persona\":{\n\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\"last_name\":\"Kazeem\",\n\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\"house_address\":\"Lagos\",\n\t\t\t\t\t\"account_number\":\"STI/1009/0001\",\n\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"identification_means\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"next_of_kin\":\"Wale\",\n\t\t\t\t\t\"next_of_kin_phone\":\"08076130237\",\n\t\t\t\t\t\"next_of_kin_address\":\"21 Adeogun Street, Ikorodu\",\n\t\t\t\t\t\"employer\":\"Facebook\",\n\t\t\t\t\t\"employer_address\":\"Abuja\",\n\t\t\t\t\t\"customer_type\":\"1\",\n\t\t\t\t\t\"company_name\": null,\n\t\t\t\t\t\"mailing_address\":\"Ikoyi, Lagos\",\n\t\t\t\t\t\"tin_number\":\"TIN-10029\",\n\t\t\t\t\t\"office_address\":\"Ikoyi, Lagos\",\n\t\t\t\t\t\"contact_person\":\"Biola Adeola\"\n\t\t\t\t},\n\t\t\"vehicle\":[\n\t\t\t\t\t{\n\t\t\t\t\t\"period\":\"12 Months\",\n\t\t\t\t\t\"policy_type\":\"Third_party\",\n\t\t\t\t\t\"enhanced_third_party\":\"third_party_only\",\n\t\t\t\t\t\"private_commercial\":\"private\", \n\t\t\t\t\t\"motor_cycle_policy\":null,\n\t\t\t\t\t\"make\":\"Toyota\",\n\t\t\t\t\t\"body_type\":\"SUV\",\n\t\t\t\t\t\"year\":\"2017\",\n\t\t\t\t\t\"home_address\":\"Lagos\",\n\t\t\t\t\t\"registration_number\":\"KSF575CZ\",\n\t\t\t\t\t\"chasis_number\":\"VTI121092920920920\",\n\t\t\t\t\t\"engine_number\":\"TYT09290921091229120\",\n\t\t\t\t\t\"vehicle_value\":\"1200000.90\",\n\t\t\t\t\t\"pictures\":[\n\t\t\t\t\t\t\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\"\n\t\t\t\t\t\t]\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\"period\":\"12 Months\",\n\t\t\t\t\t\"policy_type\":\"Third_party\",\n\t\t\t\t\t\"enhanced_third_party\":\"third_party_only\",\n\t\t\t\t\t\"private_commercial\":\"private\", \n\t\t\t\t\t\"motor_cycle_policy\":null,\n\t\t\t\t\t\"make\":\"Toyota\",\n\t\t\t\t\t\"body_type\":\"SUV\",\n\t\t\t\t\t\"year\":\"2017\",\n\t\t\t\t\t\"home_address\":\"Lagos\",\n\t\t\t\t\t\"registration_number\":\"KSF575CZ\",\n\t\t\t\t\t\"chasis_number\":\"VTI121092920920920\",\n\t\t\t\t\t\"engine_number\":\"TYT09290921091229120\",\n\t\t\t\t\t\"vehicle_value\":\"1200000.90\",\n\t\t\t\t\t\"pictures\":[\n\t\t\t\t\t\t\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\"\n\t\t\t\t\t\t]\n\t\t\t\t\t}\n\t\t\t\t],\n\t\t\"quote_price\":\"120000\",\n\t\t\"pin\":\"7038\",\n\t\t\"payment_source\":\"paystack\",\n\t\t\"user_id\":\"9\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/agents/buy-vehicle-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "agents",
+                "buy-vehicle-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy All Risk Policy by Ageny",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"persona\": {\n\t\t\"customer_type\" : \"1\",\n\t\t\"title\" : \"Mr.\",\n\t\t\"first_name\" : \"Chima\",\n\t\t\"last_name\" : \"Doe\",\n\t\t\"company_name\" : \"Doe & Sons\",\n\t\t\"email\" : \"chima@example.com\",\n\t\t\"account_number\" : \"0711347741\",\n\t\t\"phone\" : \"08011225532\",\n\t\t\"gender\" : \"Male\",\n\t\t\"house_address\" : \"address\",\n\t\t\"office_address\" : \"address\",\n\t\t\"mailing_address\" : \"address\",\n\t\t\"next_of_kin\" : \"Sarah Doe\",\n\t\t\"contact_person\" : \"Ofodile Mike\",\n\t\t\"picture\" : \"link\"\n\t},\n\t\"payment_source\" : \"paystack\",\n\t\"quote_price\" : \"2000\",\n\t\"pin\" : \"7083\",\n\t\"total_items\" : 1,\n\t\"items\" :\n\t\t[\n\t\t\t{\n\t\t\t\t\"item\" : \"Playstation 4\",\n\t\t\t\t\"value\" : \"1 million\",\n\t\t\t\t\"period\" : \"2 days\",\n\t\t\t\t\"receipt\" : \"link\",\n\t\t\t\t\"serial\":\"2121212121\",\n\t\t\t\t\"imei\":\"1212121212\"\n\t\t\t}\n\t\t]\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/agents/buy-all-risk-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "agents",
+                "buy-all-risk-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Travel Policy by Agent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"persona\": {\n\t\t\"title\" : \"Mr.\",\n\t\t\"first_name\" : \"Francis\",\n\t\t\"last_name\" : \"Doe\",\n\t\t\"email\" : \"francis@example.com\",\n\t\t\"account_number\" : \"0711647741\",\n\t\t\"phone\" : \"08011225533\",\n\t\t\"gender\" : \"Male\",\n\t\t\"house_address\" : \"address\",\n\t\t\"employer\" : \"concept\",\n\t\t\"employer_address\" : \"address\",\n\t\t\"employer_phone\" : \"08012346785\",\n\t\t\"employer_email\" : \"test@test.com\",\n\t\t\"cover_commencement_date\" : \"2018-12-23\",\n\t\t\"picture\" : \"link\",\n\t\t\"next_of_kin\" : \"Jane Doe\",\n\t\t\"next_of_kin_address\" : \"address\",\n\t\t\"next_of_kin_phone\" : \"08012345678\",\n\t\t\"identification_means\" : \"ID Card\"\n\t},\n\t\"payment_source\" : \"wallet\",\n\t\"quote_price\" : \"2000\",\n\t\"pin\" : \"7083\",\n\t\"trip\" :\n\t\t{\n\t\t\t\"trip_duration\" : \"2 weeks\",\n\t\t\t\"travel_mode\" : \"Road\",\n\t\t\t\"disability\" : \"Yes\",\n\t\t\t\"disability_details\" : \"some description\",\n\t\t\t\"place_departure\" : \"enugu\",\n\t\t\t\"place_arrival\" : \"lagos\",\n\t\t\t\"address_country_of_visit\" : \"address\"\n\t\t}\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/agents/buy-travel-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "agents",
+                "buy-travel-policy"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buy Marine Policy by Agent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (!(environment.isIntegrationTest)) {",
+                  "var responseJSON = JSON.parse(responseBody);",
+                  "",
+                  "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                  "",
+                  "var user = responseJSON.user || {};",
+                  "",
+                  "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                  "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                  "tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+                  "tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+                  "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Requested-With",
+                "value": "XMLHttpRequest"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\n\t\t\"persona\":{\n\t\t\t\t\t\"first_name\":\"Noibi\",\n\t\t\t\t\t\"last_name\":\"Kazeem\",\n\t\t\t\t\t\"email\":\"noibilism@gmail.com\",\n\t\t\t\t\t\"gender\":\"Male\", \n\t\t\t\t\t\"phone\":\"08080764159\",\n\t\t\t\t\t\"house_address\":\"Lagos\",\n\t\t\t\t\t\"account_number\":\"STI/1009/0001\",\n\t\t\t\t\t\"marital_status\":\"Single\",\n\t\t\t\t\t\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"identification_means\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUTR4t6Fi5BDCozEKuVRviBS1rsEAcINh74tH4_K0JlN0LAK1k\",\n\t\t\t\t\t\"next_of_kin\":\"Wale\",\n\t\t\t\t\t\"next_of_kin_phone\":\"08076130237\",\n\t\t\t\t\t\"next_of_kin_address\":\"21 Adeogun Street, Ikorodu\",\n\t\t\t\t\t\"employer\":\"Facebook\",\n\t\t\t\t\t\"employer_address\":\"Abuja\",\n\t\t\t\t\t\"customer_type\":\"1\",\n\t\t\t\t\t\"company_name\": null,\n\t\t\t\t\t\"mailing_address\":\"Ikoyi, Lagos\",\n\t\t\t\t\t\"tin_number\":\"TIN-10029\",\n\t\t\t\t\t\"office_address\":\"Ikoyi, Lagos\",\n\t\t\t\t\t\"contact_person\":\"Biola Adeola\"\n\t\t\t\t},\n\t\t\"cargoes\":[\n\t\t\t\t\t{\n\t\t\t\t\t\"period\":\"12 Months\",\n\t\t\t\t\t\"policy_type\":\"Marine\",\n\t\t\t\t\t\"description\":\"description\",\n\t\t\t\t\t\"pfi_number\":\"1212121\", \n\t\t\t\t\t\"pfi_date\":\"2019-12-12\",\n\t\t\t\t\t\"quantity\":\"1\",\n\t\t\t\t\t\"value\":\"20000000\",\n\t\t\t\t\t\"conversion_rate\":\"356.50\",\n\t\t\t\t\t\"loading_port\":\"Vegas\",\n\t\t\t\t\t\"discharge_port\":\"Lagos\",\n\t\t\t\t\t\"conveyance_mode\":\"Air\",\n\t\t\t\t\t\"price\":\"1200000.90\",\n\t\t\t\t\t\"pictures\":[\n\t\t\t\t\t\t\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\"\n\t\t\t\t\t\t]\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\"period\":\"12 Months\",\n\t\t\t\t\t\"policy_type\":\"Marine\",\n\t\t\t\t\t\"description\":\"description\",\n\t\t\t\t\t\"pfi_number\":\"1212121\", \n\t\t\t\t\t\"pfi_date\":\"2019-12-12\",\n\t\t\t\t\t\"quantity\":\"1\",\n\t\t\t\t\t\"value\":\"20000000\",\n\t\t\t\t\t\"conversion_rate\":\"356.50\",\n\t\t\t\t\t\"loading_port\":\"Vegas\",\n\t\t\t\t\t\"discharge_port\":\"Lagos\",\n\t\t\t\t\t\"conveyance_mode\":\"Air\",\n\t\t\t\t\t\"price\":\"1200000.90\",\n\t\t\t\t\t\"pictures\":[\n\t\t\t\t\t\t\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\",\"https://car-images.bauersecure.com/upload/33802/images/opi/header_toyota_ft1_side_view.jpg\"\n\t\t\t\t\t\t]\n\t\t\t\t\t}\n\t\t\t\t],\n\t\t\"quote_price\":\"1200000.90\",\n\t\t\"pin\":\"7038\",\n\t\t\"payment_source\":\"paystack\",\n\t\t\"user_id\":\"9\"\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/agents/buy-marine-policy",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "agents",
+                "buy-marine-policy"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "https://restapi.niid.org/NIIDRESTService/",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"CertificateNo\":\"MOT\\/PM\\/08\\/20\\/SA\\/00322\",\"PolicyNo\":\"MOT\\/PM\\/08\\/20\\/SA\\/00322\",\"CoverNoteNo\":\"MOT\\/PM\\/08\\/20\\/SA\\/00322\",\"InsuredName\":\"PRINCE BARR MRS EZENWA K. OBI\",\"ContactAddress\":\"10\\/12 LASU ROAD ISHERI OLOFI LAGOS\",\"GSMNo\":\"08130816743\",\"Email\":\"yusuf.dawodu@stiplc.com\",\"EffectiveCoverDate\":\"2020-08-13\",\"ExpirationDate\":\"2021-08-13\",\"TypeOfCover\":\"third_party_only\",\"VehicleCategory\":\"Cars\",\"EngineNo\":\"40419213MZ\",\"ChassisNo\":\"5TDZA22CX4S020802\",\"YearofMake\":\"2010\",\"VehicleMake\":\"Toyota Sienna\",\"RegistrationNo\":\"KSF728AG\",\"VehicleModel\":\"Toyota Sienna\",\"Premium\":\"5000\",\"SumAssured\":null,\"EngineCapacity\":null,\"GeographicalZone\":null,\"NiaNaicomID\":null,\"OldRegistrationNo\":null,\"Password\":\"deji\",\"Username\":\"deji.oni\",\"VehicleColor\":null}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://restapi.niid.org/NIIDRESTService/",
+          "protocol": "https",
+          "host": [
+            "restapi",
+            "niid",
+            "org"
+          ],
+          "path": [
+            "NIIDRESTService",
+            ""
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "apiUrl",
+      "value": "https://api.stiplc.com/api"
+    },
+    {
+      "key": "token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2Njc2NDk2MzAsImV4cCI6MTY2NzY1NjgzMCwianRpIjoiRDZcL3NUY3ozNlAxOFBrcUVmc0dQcnc9PSIsImlzcyI6Imh0dHBzOlwvXC9hcGkuc3RpcGxjLmNvbSIsInN1YiI6Imlibl9ub2hlZWJAZ21haWwuY29tIn0.ZH7fa8BkQROS6o2vSZBRZZiRIlfQ35T9PECsHMXpjRc"
+    },
+    {
+      "key": "EMAIL",
+      "value": "kaay@techadvance.co.za"
+    },
+    {
+      "key": "PASSWORD",
+      "value": "password12"
+    },
+    {
+      "key": "apiUrl",
+      "value": "https://api.stiplc.com/api"
+    },
+    {
+      "key": "PHONE",
+      "value": "08067139168"
+    },
+    {
+      "key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDk3MTk0NTEsImV4cCI6MTc0OTcyNjY1MSwianRpIjoiS1p5Q1VNOUJZdXE5czhlNmdiTHdyQT09IiwiaXNzIjoiaHR0cHM6XC9cL2FwaS5zdGlwbGMuY29tIiwic3ViIjoibG9AZ3JlZW5sZWFmaWIuY29tIn0.ktFCiYUpdMJYwccEuYjPU6odzZbS0F3bzCvDtH6Dz1w",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

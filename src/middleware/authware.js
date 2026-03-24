@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const db = require('../config/db');
 const Admin = require('../models/AdminUser');
 const User = require('../models/User');
 
@@ -10,10 +11,13 @@ async function authenticateToken(req, res, next) {
 
   try{
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let account;
+    const userModel = new User(db);
+    const adminModel = new Admin(db);
     if (decoded.type === 'admin') {
-      account = await Admin.findById(decodel.id);
+      account = await adminModel.findById(decoded.id);
     } else if (decoded.type === 'user') {
-      account = await User.findById(decoded.id);
+      account = await userModel.findById(decoded.id);
     } else {
       return res.status(403).json({ error: 'Invalid account type' });
     }
@@ -27,6 +31,7 @@ async function authenticateToken(req, res, next) {
     next();
   }
   catch(err){
+    console.error(err)
     return res.status(403).json({ error: 'Invalid token' });
   }
 }

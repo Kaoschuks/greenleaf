@@ -11,8 +11,11 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Expose the port the app runs on (adjust if not 3000)
+# Install nodemon globally for hot reload
+RUN npm install -g nodemon
+
+# Expose the port the app runs on
 EXPOSE 5000
 
-# Start the service
-CMD ["npm", "start"]
+# Start the service with nodemon for hot reload
+CMD ["nodemon", "--exec", "npm", "start"]

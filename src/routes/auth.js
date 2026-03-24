@@ -3,11 +3,46 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const AdminUser = require('../models/AdminUser');
 const authenticateToken = require('../middleware/authware');
-const compareHash = require('../utils/utils')
+const { compareHash } = require('../utils/utils')
 
 const router = express.Router();
 
 
+/**
+ * @swagger
+ * /auth/signup:
+ *   post:
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       500:
+ *         description: Server error
+ */
 router.post('/signup', async (req, res) => {
   try {
     const userModel = new User(req.db);
@@ -19,6 +54,40 @@ router.post('/signup', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: User login
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Invalid credentials
+ */
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -42,6 +111,25 @@ router.post('/login', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Get current user profile
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 router.get('/me', authenticateToken, async (req, res) => {
     try {
       const userModel = new User(req.db);
@@ -59,7 +147,27 @@ router.get('/me', authenticateToken, async (req, res) => {
     }
   });  
 
-  router.get('/me/referral', authenticateToken, async (req, res) => {
+  /**
+ * @swagger
+ * /auth/me/referral:
+ *   get:
+ *     summary: Get user's referral code
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Referral code
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: string
+ *       500:
+ *         description: Server error
+ */
+router.get('/me/referral', authenticateToken, async (req, res) => {
     try{
       const userModel = new User(req.db);
       const code = await userModel.findReferralCode(req.user.id);
@@ -154,7 +262,6 @@ router.get('/me', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'Invalid credentials' });
       }
       delete user.password;
-      delete user.id;
   
       const token = jwt.sign({ 
         id: user.id, role: user.role, type: 'admin'

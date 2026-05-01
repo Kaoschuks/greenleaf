@@ -1,7 +1,6 @@
 const express = require('express');
 const Provider = require('../models/Provider');
-const Policy = require('../models/Policy');
-const sovereignApi = require('../services/sovereigntrustapi');
+const { getProviderAdapter } = require('../services/providers');
 const { syncProvider, triggerManualSync } = require('../services/providersync');
 const authMiddleware = require('../middleware/authware');
 
@@ -91,42 +90,32 @@ router.post('/', authMiddleware, async (req, res) => {
 // Get provider by name (needed by admin/mobile)
 router.get('/name/:name', authMiddleware, async (req, res) => {
     const providerModel = new Provider(req.db);
-    const policyModel = new Policy(req.db);
     try {
         const provider = await providerModel.findByName(req.params.name);
         if (!provider) {
             return res.status(404).json({ error: 'Provider not found' });
         }
 
-        // Get wallet details from Sovereign API if available
         let walletDetails = null;
         let walletHistory = null;
         try {
-            walletDetails = await sovereignApi.getWalletDetails();
-            walletHistory = await sovereignApi.getWalletHistory();
+            const adapter = getProviderAdapter(provider);
+            walletDetails = await adapter.getWalletDetails();
+            walletHistory = await adapter.getWalletHistory();
         } catch (e) {
-            console.log('Could not fetch Sovereign wallet details:', e.message);
+            console.log(`Could not fetch wallet details for provider ${provider.name}:`, e.message);
         }
 
-        // Get all policies for this provider
         const [policies] = await req.db.execute(
-            `SELECT p.*, 
-                CONCAT(u.first_name, ' ', u.last_name) as user_name,
-                p.cost as premium,
-                p.the_name as policy_type
+            `SELECT p.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, p.cost as premium
              FROM insurance_policies p
              LEFT JOIN users u ON p.user_id = u.id
-             WHERE p.provider_name = ? 
+             WHERE p.provider_name = ?
              ORDER BY p.created_at DESC`,
             [provider.name]
         );
 
-        res.json({
-            provider,
-            wallet: walletDetails,
-            wallet_history: walletHistory,
-            policies
-        });
+        res.json({ provider, wallet: walletDetails, wallet_history: walletHistory, policies });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -151,42 +140,32 @@ router.get('/name/:name', authMiddleware, async (req, res) => {
  */
 router.get('/:id', authMiddleware, async (req, res) => {
     const providerModel = new Provider(req.db);
-    const policyModel = new Policy(req.db);
     try {
         const provider = await providerModel.findById(req.params.id);
         if (!provider) {
             return res.status(404).json({ error: 'Provider not found' });
         }
 
-        // Get wallet details from Sovereign API if available
         let walletDetails = null;
         let walletHistory = null;
         try {
-            walletDetails = await sovereignApi.getWalletDetails();
-            walletHistory = await sovereignApi.getWalletHistory();
+            const adapter = getProviderAdapter(provider);
+            walletDetails = await adapter.getWalletDetails();
+            walletHistory = await adapter.getWalletHistory();
         } catch (e) {
-            console.log('Could not fetch Sovereign wallet details:', e.message);
+            console.log(`Could not fetch wallet details for provider ${provider.name}:`, e.message);
         }
 
-        // Get all policies for this provider
         const [policies] = await req.db.execute(
-            `SELECT p.*, 
-                CONCAT(u.first_name, ' ', u.last_name) as user_name,
-                p.cost as premium,
-                p.the_name as policy_type
+            `SELECT p.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, p.cost as premium
              FROM insurance_policies p
              LEFT JOIN users u ON p.user_id = u.id
-             WHERE p.provider_name = ? 
+             WHERE p.provider_name = ?
              ORDER BY p.created_at DESC`,
             [provider.name]
         );
 
-        res.json({
-            provider,
-            wallet: walletDetails,
-            wallet_history: walletHistory,
-            policies
-        });
+        res.json({ provider, wallet: walletDetails, wallet_history: walletHistory, policies });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -279,18 +258,12 @@ router.post('/:id/refresh-wallet', authMiddleware, async (req, res) => {
             return res.status(404).json({ error: 'Provider not found' });
         }
 
-        // Fetch latest wallet details from Sovereign API
-        const walletDetails = await sovereignApi.getWalletDetails();
-        
-        // Update local wallet balance
+        const adapter = getProviderAdapter(provider);
+        const walletDetails = await adapter.getWalletDetails();
         const newBalance = walletDetails.wallet?.balance || 0;
         await providerModel.updateWalletBalance(req.params.id, newBalance);
 
-        res.json({ 
-            message: 'Wallet balance refreshed', 
-            balance: newBalance,
-            wallet: walletDetails
-        });
+        res.json({ message: 'Wallet balance refreshed', balance: newBalance, wallet: walletDetails });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -321,7 +294,8 @@ router.get('/:id/transactions', authMiddleware, async (req, res) => {
             return res.status(404).json({ error: 'Provider not found' });
         }
 
-        const walletHistory = await sovereignApi.getWalletHistory();
+        const adapter = getProviderAdapter(provider);
+        const walletHistory = await adapter.getWalletHistory();
         res.json({ transactions: walletHistory });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -356,24 +330,19 @@ router.get('/:id/transactions', authMiddleware, async (req, res) => {
  *         description: List of policies from the provider
  */
 router.get('/name/:provider_name/policies', authMiddleware, async (req, res) => {
-    const policyModel = new Policy(req.db);
     const page = parseInt(req.query.page) || 1;
     const size = parseInt(req.query.size) || 10;
-    
+
     try {
-        // Get policies from local database filtered by provider with user join
         const [policies] = await req.db.execute(
-            `SELECT p.*, 
-                CONCAT(u.first_name, ' ', u.last_name) as user_name,
-                p.cost as premium,
-                p.the_name as policy_type
+            `SELECT p.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, p.cost as premium
              FROM insurance_policies p
              LEFT JOIN users u ON p.user_id = u.id
-             WHERE p.provider_name = ? 
+             WHERE p.provider_name = ?
              ORDER BY p.created_at DESC LIMIT ${parseInt(size)} OFFSET ${parseInt((page - 1) * size)}`,
             [req.params.provider_name]
         );
-        
+
         res.json({ policies });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -426,13 +395,7 @@ router.post('/:id/sync', authMiddleware, async (req, res) => {
     }
 });
 
-module.exports = router;
-
-// ==================== POLICY TYPES ====================
-
-// Get available policy types from Sovereign Trust
-router.get('/types', async (req, res) => {
-    // Return available policy types
+router.get('/types', authMiddleware, (_req, res) => {
     const policyTypes = [
         {
             id: 'vehicle',
@@ -479,6 +442,8 @@ router.get('/types', async (req, res) => {
             }
         }
     ];
-    
+
     res.json({ types: policyTypes });
 });
+
+module.exports = router;

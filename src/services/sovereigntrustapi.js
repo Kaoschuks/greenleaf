@@ -94,38 +94,53 @@ async function debitWallet(walletUid, amount, description = 'Withdrawal') {
 
 // ==================== POLICY OPERATIONS (Agent) ====================
 
-async function buyVehiclePolicy(policyData) {
+async function buyVehiclePolicy({ persona, vehicle, quote_price, pin, payment_source }) {
   return sovereignRequest('POST', '/agents/buy-vehicle-policy', {
-    persona: policyData.persona,
-    vehicle: policyData.vehicle
+    persona,
+    vehicle,
+    quote_price,
+    pin,
+    payment_source
   });
 }
 
-async function buyMarinePolicy(policyData) {
+async function buyMarinePolicy({ persona, cargoes, quote_price, pin, payment_source }) {
   return sovereignRequest('POST', '/agents/buy-marine-policy', {
-    persona: policyData.persona,
-    marine: policyData.marine
+    persona,
+    marine: cargoes,
+    quote_price,
+    pin,
+    payment_source
   });
 }
 
-async function buySwissPolicy(policyData) {
+async function buySwissPolicy({ persona, quote_price, pin, payment_source }) {
   return sovereignRequest('POST', '/agents/buy-swiss-policy', {
-    persona: policyData.persona,
-    swiss: policyData.swiss
+    persona,
+    quote_price,
+    pin,
+    payment_source
   });
 }
 
-async function buyAllRiskPolicy(policyData) {
+async function buyAllRiskPolicy({ persona, items, total_items, quote_price, pin, payment_source }) {
   return sovereignRequest('POST', '/agents/buy-all-risk-policy', {
-    persona: policyData.persona,
-    allrisk: policyData.allrisk
+    persona,
+    allrisk: items,
+    total_items,
+    quote_price,
+    pin,
+    payment_source
   });
 }
 
-async function buyTravelPolicy(policyData) {
+async function buyTravelPolicy({ persona, trip, quote_price, pin, payment_source }) {
   return sovereignRequest('POST', '/agents/buy-travel-policy', {
-    persona: policyData.persona,
-    travel: policyData.travel
+    persona,
+    travel: trip,
+    quote_price,
+    pin,
+    payment_source
   });
 }
 

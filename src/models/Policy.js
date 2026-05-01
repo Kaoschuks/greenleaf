@@ -8,8 +8,8 @@ class Policy {
 
     async create(policyData, userId) {
         const [result] = await this.db.execute(
-            `INSERT INTO insurance_policies (user_id, the_name, provider_name, cost, frequency, 
-            next_payment_time, the_status, provider_reference) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO insurance_policies (user_id, the_name, provider_name, cost, frequency,
+            next_payment_time, the_status, provider_reference, policy_type, provider_payload) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 userId,
                 policyData.name,
@@ -18,7 +18,9 @@ class Policy {
                 policyData.frequency,
                 getCurrentDateTime(),
                 PolicyStatus.INREVIEW,
-                policyData.provider_reference || null
+                policyData.provider_reference || null,
+                policyData.policy_type || null,
+                policyData.provider_payload ? JSON.stringify(policyData.provider_payload) : null
             ]
         );
         return result;
@@ -27,13 +29,12 @@ class Policy {
     async getByUserId(userId, page = 1, size = 10) {
         const offset = (page - 1) * size;
         const [rows] = await this.db.execute(
-            `SELECT p.*, 
+            `SELECT p.*,
                 CONCAT(u.first_name, ' ', u.last_name) as user_name,
-                p.cost as premium,
-                p.the_name as policy_type
+                p.cost as premium
              FROM insurance_policies p
              LEFT JOIN users u ON p.user_id = u.id
-             WHERE p.user_id = ? 
+             WHERE p.user_id = ?
              ORDER BY p.created_at DESC LIMIT ${parseInt(size)} OFFSET ${parseInt(offset)}`,
             [userId]
         );
@@ -42,10 +43,9 @@ class Policy {
 
     async getAll(page = 1, size = 10, providerName = null) {
         const offset = (page - 1) * size;
-        let query = `SELECT p.*, 
+        let query = `SELECT p.*,
             CONCAT(u.first_name, ' ', u.last_name) as user_name,
-            p.cost as premium,
-            p.the_name as policy_type
+            p.cost as premium
          FROM insurance_policies p
          LEFT JOIN users u ON p.user_id = u.id`;
         const params = [];
@@ -63,10 +63,9 @@ class Policy {
 
     async getById(policyId) {
         const [rows] = await this.db.execute(
-            `SELECT p.*, 
+            `SELECT p.*,
                 CONCAT(u.first_name, ' ', u.last_name) as user_name,
-                p.cost as premium,
-                p.the_name as policy_type
+                p.cost as premium
              FROM insurance_policies p
              LEFT JOIN users u ON p.user_id = u.id
              WHERE p.id = ?`,

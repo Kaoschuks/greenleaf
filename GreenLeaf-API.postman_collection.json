@@ -1,0 +1,1136 @@
+{
+  "info": {
+    "name": "GreenLeaf Insurance API",
+    "description": "Complete API collection for GreenLeaf Insurance Broker platform. GreenLeaf acts as an agent on insurance providers (e.g. Sovereign Trust). All policies are created on the provider first; GreenLeaf's database records reference the provider policy.\n\n**Setup:**\n1. Set `base_url` variable (default: `http://localhost:5000`)\n2. Run `POST /auth/login` → copy token → set `user_token`\n3. Run `POST /auth/admin/login` → copy token → set `admin_token`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000", "type": "string" },
+    { "key": "user_token", "value": "", "type": "string" },
+    { "key": "admin_token", "value": "", "type": "string" },
+    { "key": "policy_id", "value": "1", "type": "string" },
+    { "key": "provider_id", "value": "1", "type": "string" },
+    { "key": "user_id", "value": "1", "type": "string" },
+    { "key": "transaction_id", "value": "1", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/signup",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Amara\",\n  \"last_name\": \"Okafor\",\n  \"middle_name\": \"Chidi\",\n  \"email\": \"amara.okafor@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"phone\": \"08012345678\",\n  \"gender\": \"female\",\n  \"date_of_birth\": \"1995-04-12\",\n  \"nin\": \"12345678901\",\n  \"referral_code\": \"\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"message\": \"User registered successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) pm.collectionVariables.set('user_token', res.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"amara.okafor@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Login successful\",\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n}"
+            },
+            {
+              "name": "Invalid Credentials",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"error\": \"Invalid email or password\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Current User (Auth)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/auth/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"first_name\": \"Amara\",\n  \"last_name\": \"Okafor\",\n  \"email\": \"amara.okafor@example.com\",\n  \"phone\": \"08012345678\",\n  \"gender\": \"female\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Referral Code",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/auth/me/referral",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"code\": \"AMARA2024\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.response && res.response.token) pm.collectionVariables.set('admin_token', res.response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/admin/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"superadmin\",\n  \"password\": \"admin123\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Login successful\",\n  \"response\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n      \"id\": 1,\n      \"first_name\": \"Super\",\n      \"last_name\": \"Admin\",\n      \"username\": \"superadmin\",\n      \"role\": \"superadmin\"\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Admin",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/admin/create",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Emeka\",\n  \"last_name\": \"Nwosu\",\n  \"username\": \"emeka.admin\",\n  \"password\": \"AdminPass123!\",\n  \"role\": \"admin\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"message\": \"Admin User created successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/user/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 5,\n  \"first_name\": \"Amara\",\n  \"last_name\": \"Okafor\",\n  \"email\": \"amara.okafor@example.com\",\n  \"phone\": \"08012345678\",\n  \"gender\": \"female\",\n  \"date_of_birth\": \"1995-04-12\",\n  \"nin\": \"12345678901\",\n  \"nin_verified\": false,\n  \"user_address\": \"14 Broad Street, Lagos\",\n  \"marital_status\": \"single\",\n  \"next_of_kin\": \"Chidi Okafor\",\n  \"next_of_kin_phone\": \"08098765432\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/user/me",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_address\": \"14 Broad Street, Lagos Island\",\n  \"marital_status\": \"single\",\n  \"next_of_kin\": \"Chidi Okafor\",\n  \"next_of_kin_phone\": \"08098765432\",\n  \"employer\": \"TechCorp Nigeria Ltd\",\n  \"employer_address\": \"Plot 5 Victoria Island, Lagos\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Profile updated successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/user/me/change-password",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"SecurePass123!\",\n  \"newPassword\": \"NewSecurePass456!\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Password changed successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Verify NIN",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/user/verify-nin",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nin\": \"12345678901\",\n  \"firstName\": \"Amara\",\n  \"lastName\": \"Okafor\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Verified",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"valid\": true,\n  \"data\": { \"nin\": \"12345678901\", \"first_name\": \"Amara\", \"last_name\": \"Okafor\" },\n  \"message\": \"NIN verified successfully\"\n}"
+            },
+            {
+              "name": "Invalid Format",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"valid\": false,\n  \"error\": \"Invalid NIN format. NIN must be 11 digits.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/user/me/notifications?limit=20&offset=0",
+              "query": [
+                { "key": "limit", "value": "20" },
+                { "key": "offset", "value": "0" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          }
+        },
+        {
+          "name": "Get Unread Notification Count",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/user/me/notifications/unread-count",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"count\": 3\n}"
+            }
+          ]
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/user/me/notifications/7/read",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          }
+        },
+        {
+          "name": "Mark All Notifications as Read",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/user/me/notifications/read-all",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          }
+        },
+        {
+          "name": "Get Settings",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/user/me/settings",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"email_notifications\": true,\n  \"push_notifications\": true,\n  \"sms_notifications\": false,\n  \"policy_reminders\": true,\n  \"marketing_emails\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Settings",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/user/me/settings",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailNotifications\": true,\n  \"pushNotifications\": true,\n  \"smsNotifications\": true,\n  \"policyReminders\": true,\n  \"marketingEmails\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Activity Log",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/user/me/activities?limit=20&offset=0",
+              "query": [
+                { "key": "limit", "value": "20" },
+                { "key": "offset", "value": "0" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          }
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/user/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "item": [
+        {
+          "name": "Get Balance",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/wallet/balance",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"balance\": \"45000.00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Fund Wallet (Init Paystack Payment)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/wallet/fund",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 20000,\n  \"description\": \"Wallet top-up\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"paymentUrl\": \"https://checkout.paystack.com/abc123xyz\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Transactions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/wallet/transactions?page=1&size=10",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"transactions\": [\n    {\n      \"id\": 12,\n      \"transaction_id\": \"TXN17234567891234\",\n      \"type\": \"debit\",\n      \"amount\": \"15000.00\",\n      \"description\": \"Policy purchase: Toyota Corolla Comprehensive\",\n      \"status\": \"completed\",\n      \"balance_before\": \"45000.00\",\n      \"balance_after\": \"30000.00\",\n      \"created_at\": \"2026-04-15T10:30:00Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Transaction Stats (Admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/wallet/transactions/stats",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"total_credit\": \"5200000.00\",\n  \"total_debit\": \"3800000.00\",\n  \"total_transactions\": 284,\n  \"pending_transactions\": 3\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get User Transactions (Admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/wallet/user/{{user_id}}/transactions?page=1&size=10",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Credit Wallet (Admin)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/wallet/credit",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 5000,\n  \"description\": \"Referral bonus credit\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Wallet credited\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Debit Wallet (Admin)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/wallet/debit",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000,\n  \"description\": \"Manual adjustment\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Approve Transaction (Admin)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/wallet/transactions/{{transaction_id}}/approve",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Transaction approved successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Reject Transaction (Admin)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/wallet/transactions/{{transaction_id}}/reject",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Policies",
+      "item": [
+        {
+          "name": "List My Policies",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/policy?page=1&size=10",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"policies\": [\n    {\n      \"id\": 3,\n      \"the_name\": \"Toyota Corolla Comprehensive\",\n      \"provider_name\": \"sovereign-trust\",\n      \"cost\": \"15000.00\",\n      \"premium\": \"15000.00\",\n      \"frequency\": \"yearly\",\n      \"the_status\": \"active\",\n      \"policy_type\": \"vehicle\",\n      \"provider_reference\": \"SV-2026-00312\",\n      \"start_date\": \"2026-01-01\",\n      \"end_date\": \"2026-12-31\",\n      \"user_name\": \"Amara Okafor\",\n      \"created_at\": \"2026-01-01T09:15:00Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "List All Policies (Admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/policy?page=1&size=10&provider=sovereign-trust",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "10" },
+                { "key": "provider", "value": "sovereign-trust" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Create Vehicle Policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id) pm.collectionVariables.set('policy_id', res.id.toString());"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/policy",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Toyota Corolla Comprehensive\",\n  \"provider\": \"sovereign-trust\",\n  \"cost\": 15000,\n  \"frequency\": \"yearly\",\n  \"policy_type\": \"vehicle\",\n  \"quote_price\": 15000,\n  \"payment_source\": \"wallet\",\n  \"vehicle\": {\n    \"make\": \"Toyota\",\n    \"model\": \"Corolla\",\n    \"year\": 2020,\n    \"registration_number\": \"LAG-234-XY\",\n    \"chassis_number\": \"JTDBU4EE9AJ123456\",\n    \"engine_number\": \"1NZ-FE123456\",\n    \"vehicle_value\": 5500000,\n    \"policy_type\": \"comprehensive\"\n  }\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"message\": \"Policy created and paid successfully\",\n  \"id\": 3,\n  \"amount_paid\": 15000,\n  \"provider_reference\": \"SV-2026-00312\",\n  \"provider_response\": {\n    \"status\": \"success\",\n    \"policy_number\": \"POL-VEH-2026-00312\",\n    \"provider_reference\": \"SV-2026-00312\"\n  }\n}"
+            },
+            {
+              "name": "Insufficient Funds",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"error\": \"Insufficient funds\",\n  \"required\": 15000,\n  \"available\": 5000\n}"
+            },
+            {
+              "name": "Provider Not Found",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"error\": \"Provider 'unknown-broker' not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Marine Policy",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/policy",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics Import Marine Cover\",\n  \"provider\": \"sovereign-trust\",\n  \"cost\": 8000,\n  \"frequency\": \"monthly\",\n  \"policy_type\": \"marine\",\n  \"quote_price\": 8000,\n  \"payment_source\": \"wallet\",\n  \"cargoes\": [\n    {\n      \"period\": \"30\",\n      \"policy_type\": \"open\",\n      \"description\": \"Electronics and gadgets\",\n      \"value\": 2000000,\n      \"loading_port\": \"Shenzhen, China\",\n      \"discharge_port\": \"Apapa, Lagos\"\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Create All Risk Policy",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/policy",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop All Risk Cover\",\n  \"provider\": \"sovereign-trust\",\n  \"cost\": 3500,\n  \"frequency\": \"yearly\",\n  \"policy_type\": \"allrisk\",\n  \"quote_price\": 3500,\n  \"payment_source\": \"wallet\",\n  \"items\": [\n    {\n      \"item\": \"MacBook Pro 14-inch\",\n      \"value\": 650000,\n      \"period\": \"365\",\n      \"serial\": \"C02XG2JHJGH5\",\n      \"imei\": \"\"\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Travel Policy",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/policy",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"London Business Trip Cover\",\n  \"provider\": \"sovereign-trust\",\n  \"cost\": 5000,\n  \"frequency\": \"monthly\",\n  \"policy_type\": \"travel\",\n  \"quote_price\": 5000,\n  \"payment_source\": \"wallet\",\n  \"trip\": {\n    \"trip_duration\": \"14\",\n    \"travel_mode\": \"air\",\n    \"place_departure\": \"Lagos, Nigeria\",\n    \"place_arrival\": \"London, United Kingdom\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Swiss Life Policy",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/policy",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Swiss Life Cover - Basic\",\n  \"provider\": \"sovereign-trust\",\n  \"cost\": 10000,\n  \"frequency\": \"monthly\",\n  \"policy_type\": \"swiss\",\n  \"quote_price\": 10000,\n  \"payment_source\": \"wallet\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Policy",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/policy/{{policy_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 3,\n  \"the_name\": \"Toyota Corolla Comprehensive\",\n  \"provider_name\": \"sovereign-trust\",\n  \"cost\": \"15000.00\",\n  \"premium\": \"15000.00\",\n  \"frequency\": \"yearly\",\n  \"the_status\": \"active\",\n  \"policy_type\": \"vehicle\",\n  \"provider_reference\": \"SV-2026-00312\",\n  \"start_date\": \"2026-01-01\",\n  \"end_date\": \"2026-12-31\",\n  \"user_id\": 5,\n  \"user_name\": \"Amara Okafor\"\n}"
+            },
+            {
+              "name": "Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"error\": \"Policy not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Policy Transactions",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/policy/{{policy_id}}/transactions",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          }
+        },
+        {
+          "name": "Get Policy Stats (Admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/policy/stats",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"total\": 142,\n  \"active\": 118,\n  \"expired\": 14,\n  \"cancelled\": 7,\n  \"pending\": 3,\n  \"total_premium\": \"2340000.00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get User Policies (Admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/policy/user/{{user_id}}?page=1&size=10",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Update Policy",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/policy/{{policy_id}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Toyota Corolla Comprehensive - Updated\",\n  \"start_date\": \"2026-01-01\",\n  \"end_date\": \"2026-12-31\",\n  \"activation_date\": \"2026-01-01\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Policy updated successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Policy Status",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/policy/{{policy_id}}/status",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Cancel Policy",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/policy/{{policy_id}}/cancel",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Policy cancelled successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Renew Policy",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/policy/{{policy_id}}/renew",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{user_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start_date\": \"2027-01-01\",\n  \"end_date\": \"2027-12-31\",\n  \"premium\": 16000\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Policy renewed successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Policy (Admin)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/policy/{{policy_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Policy deleted successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Providers",
+      "item": [
+        {
+          "name": "List Providers",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/providers",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"providers\": [\n    {\n      \"id\": 1,\n      \"name\": \"sovereign-trust\",\n      \"display_name\": \"Sovereign Trust Insurance\",\n      \"api_base_url\": \"http://206.189.119.166:8040/api\",\n      \"wallet_balance\": \"1250000.00\",\n      \"is_active\": true,\n      \"website\": \"https://sovereigntrustinsurance.com\",\n      \"last_synced_at\": \"2026-04-28T08:00:00Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Policy Types",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/providers/types",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"types\": [\n    {\n      \"id\": \"vehicle\",\n      \"name\": \"Vehicle Insurance\",\n      \"description\": \"Comprehensive and third-party motor insurance\",\n      \"requiredFields\": {\n        \"persona\": [\"first_name\",\"last_name\",\"email\",\"phone\",\"gender\",\"house_address\"],\n        \"vehicle\": [\"make\",\"model\",\"year\",\"registration_number\",\"chassis_number\",\"engine_number\",\"vehicle_value\",\"policy_type\"]\n      }\n    },\n    {\n      \"id\": \"marine\",\n      \"name\": \"Marine Insurance\",\n      \"description\": \"Marine cargo and hull insurance\"\n    },\n    {\n      \"id\": \"allrisk\",\n      \"name\": \"All Risk Insurance\",\n      \"description\": \"Personal all risk insurance for electronics and valuables\"\n    },\n    {\n      \"id\": \"travel\",\n      \"name\": \"Travel Insurance\",\n      \"description\": \"Domestic and international travel insurance\"\n    },\n    {\n      \"id\": \"swiss\",\n      \"name\": \"Swiss Life Insurance\",\n      \"description\": \"Swiss life insurance policy\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Provider (Admin)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/providers",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"sovereign-trust\",\n  \"display_name\": \"Sovereign Trust Insurance\",\n  \"api_base_url\": \"http://206.189.119.166:8040/api\",\n  \"agent_email\": \"greenleaf@sovereigntrust.com\",\n  \"agent_password\": \"agentpassword123\",\n  \"wallet_uid\": \"GL-WALLET-001\",\n  \"description\": \"Sovereign Trust Insurance PLC - leading Nigerian insurer\",\n  \"website\": \"https://sovereigntrustinsurance.com\",\n  \"is_active\": true\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"message\": \"Provider created successfully\",\n  \"id\": 1\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Provider by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/providers/{{provider_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"provider\": {\n    \"id\": 1,\n    \"name\": \"sovereign-trust\",\n    \"display_name\": \"Sovereign Trust Insurance\",\n    \"wallet_balance\": \"1250000.00\",\n    \"is_active\": true\n  },\n  \"wallet\": {\n    \"balance\": 1250000,\n    \"currency\": \"NGN\"\n  },\n  \"wallet_history\": [],\n  \"policies\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Provider by Name",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/providers/name/sovereign-trust",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Get Provider Policies by Name",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/providers/name/sovereign-trust/policies?page=1&size=10",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Refresh Provider Wallet",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/providers/{{provider_id}}/refresh-wallet",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Wallet balance refreshed\",\n  \"balance\": 1250000,\n  \"wallet\": { \"balance\": 1250000, \"currency\": \"NGN\" }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Provider Wallet Transactions",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/providers/{{provider_id}}/transactions",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Update Provider (Admin)",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/providers/{{provider_id}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"display_name\": \"Sovereign Trust Insurance PLC\",\n  \"is_active\": true,\n  \"description\": \"Updated description\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Sync Provider",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/providers/{{provider_id}}/sync",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Sync All Providers",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/providers/sync",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Delete Provider (Admin)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/providers/{{provider_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "List All Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/users?page=1&size=10",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "10" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"users\": [\n    {\n      \"id\": 5,\n      \"first_name\": \"Amara\",\n      \"last_name\": \"Okafor\",\n      \"email\": \"amara.okafor@example.com\",\n      \"phone\": \"08012345678\",\n      \"created_at\": \"2026-01-10T08:30:00Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/admin/users/{{user_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "List Admins",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/admin/admins",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Create Admin",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/admin/admins",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Kemi\",\n  \"last_name\": \"Adeyemi\",\n  \"username\": \"kemi.admin\",\n  \"password\": \"AdminPass789!\",\n  \"role\": \"admin\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Admin",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/admin/admins/2",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Kemi\",\n  \"last_name\": \"Adeyemi-Cole\",\n  \"role\": \"moderator\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Admin",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/admin/admins/2",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Get App Settings",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/admin/settings",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"app_name\": \"GreenLeaf\",\n  \"company_name\": \"GreenLeaf Insurance Brokers Ltd\",\n  \"company_email\": \"hello@greenleafib.com\",\n  \"minimum_withdrawal\": \"1000.00\",\n  \"maximum_withdrawal\": \"1000000.00\",\n  \"kyc_required\": true,\n  \"maintenance_mode\": false,\n  \"currency\": \"NGN\",\n  \"currency_symbol\": \"₦\",\n  \"transaction_fee\": \"0.00\",\n  \"referral_bonus\": \"500.00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update App Settings",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/admin/settings",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"app_name\": \"GreenLeaf\",\n  \"company_name\": \"GreenLeaf Insurance Brokers Ltd\",\n  \"company_email\": \"hello@greenleafib.com\",\n  \"company_phone\": \"+2348001234567\",\n  \"company_address\": \"3rd Floor, Marina Towers, Lagos Island\",\n  \"support_email\": \"support@greenleafib.com\",\n  \"minimum_withdrawal\": 1000,\n  \"maximum_withdrawal\": 1000000,\n  \"kyc_required\": true,\n  \"referral_bonus\": 500,\n  \"transaction_fee\": 0,\n  \"currency\": \"NGN\",\n  \"currency_symbol\": \"₦\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "Paystack Webhook",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/webhook/paystack",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-paystack-signature", "value": "<hmac-sha512-signature>" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"charge.success\",\n  \"data\": {\n    \"id\": 302961,\n    \"reference\": \"qTPRJNEYO2\",\n    \"amount\": 2000000,\n    \"currency\": \"NGN\",\n    \"status\": \"success\",\n    \"customer\": {\n      \"email\": \"amara.okafor@example.com\"\n    },\n    \"metadata\": {\n      \"userId\": 5,\n      \"desc\": \"Wallet top-up\"\n    }\n  }\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Processed",
+              "status": "OK",
+              "code": 200,
+              "body": ""
+            },
+            {
+              "name": "Unauthorized (Bad Signature)",
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "Unauthorized"
+            }
+          ]
+        },
+        {
+          "name": "Paystack Webhook Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/webhook/paystack"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Wen successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

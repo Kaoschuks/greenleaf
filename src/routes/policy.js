@@ -2,8 +2,9 @@ const express = require('express');
 const Policy = require('../models/Policy');
 const Wallet = require('../models/Wallet');
 const User = require('../models/User');
+const Provider = require('../models/Provider');
 const authMiddleware = require('../middleware/authware');
-const sovereignApi = require('../services/sovereigntrustapi');
+const { getProviderAdapter } = require('../services/providers');
 
 const router = express.Router();
 
@@ -163,49 +164,48 @@ router.post('/', authMiddleware, async (req, res) => {
     const policyModel = new Policy(req.db);
     const wallet = new Wallet(req.db);
     const userModel = new User(req.db);
-    
+
     try {
         const userId = req.user.id;
-        const { 
-            cost, 
-            name, 
-            provider, 
-            frequency, 
-            provider_reference,
-            policy_type,  // vehicle, marine, allrisk, travel, swiss
-            persona,      // user personal info for sovereign API
-            vehicle,       // for vehicle policy
-            cargoes,      // for marine policy
-            items,         // for all risk policy
-            trip,          // for travel policy
+        const {
+            cost,
+            name,
+            provider,
+            frequency,
+            policy_type,
+            persona,
+            vehicle,
+            cargoes,
+            items,
+            trip,
             quote_price,
             pin,
             payment_source
         } = req.body;
-        
-        // Check if cost is provided
+
         if (!cost) {
             return res.status(400).json({ error: 'Policy cost is required' });
         }
-        
-        // Get user's wallet balance
+
+        const validPolicyTypes = ['vehicle', 'marine', 'allrisk', 'travel', 'swiss'];
+        if (!policy_type || !validPolicyTypes.includes(policy_type)) {
+            return res.status(400).json({ error: `policy_type is required and must be one of: ${validPolicyTypes.join(', ')}` });
+        }
+
         const balance = await wallet.getBalance(userId);
         const balanceNum = parseFloat(balance);
         const costNum = parseFloat(cost);
-        
-        // Check if user has sufficient balance
+
         if (balanceNum < costNum) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 error: 'Insufficient funds',
                 required: costNum,
                 available: balanceNum
             });
         }
-        
-        // Get user info for persona
+
         const user = await userModel.findById(userId);
-        
-        // Build persona from user data if not provided
+
         const personaData = persona || {
             first_name: user.first_name,
             last_name: user.last_name,
@@ -225,100 +225,53 @@ router.post('/', authMiddleware, async (req, res) => {
             mailing_address: user.user_address || '',
             office_address: user.user_address || ''
         };
-        
-        // Call Sovereign Trust API based on policy type
-        let sovereignResult = null;
-        let providerRef = provider_reference;
-        
-        try {
-            switch (policy_type) {
-                case 'vehicle':
-                    sovereignResult = await sovereignApi.buyVehiclePolicy({
-                        persona: personaData,
-                        vehicle: vehicle || [],
-                        quote_price: quote_price || cost,
-                        pin: pin || '7038',
-                        payment_source: payment_source || 'wallet'
-                    });
-                    break;
-                    
-                case 'marine':
-                    sovereignResult = await sovereignApi.buyMarinePolicy({
-                        persona: personaData,
-                        cargoes: cargoes || [],
-                        quote_price: quote_price || cost,
-                        pin: pin || '7038',
-                        payment_source: payment_source || 'wallet'
-                    });
-                    break;
-                    
-                case 'allrisk':
-                    sovereignResult = await sovereignApi.buyAllRiskPolicy({
-                        persona: personaData,
-                        items: items || [],
-                        quote_price: quote_price || cost,
-                        pin: pin || '7038',
-                        payment_source: payment_source || 'wallet',
-                        total_items: items ? items.length : 1
-                    });
-                    break;
-                    
-                case 'travel':
-                    sovereignResult = await sovereignApi.buyTravelPolicy({
-                        persona: personaData,
-                        trip: trip || {},
-                        quote_price: quote_price || cost,
-                        pin: pin || '7038',
-                        payment_source: payment_source || 'wallet'
-                    });
-                    break;
-                    
-                case 'swiss':
-                    sovereignResult = await sovereignApi.buySwissPolicy({
-                        persona: personaData,
-                        quote_price: quote_price || cost,
-                        pin: pin || '7038',
-                        payment_source: payment_source || 'wallet'
-                    });
-                    break;
-                    
-                default:
-                    // If no policy type, just create locally without calling Sovereign API
-                    console.log('No policy type specified, creating local policy only');
-            }
-            
-            // Get provider reference from response if available
-            if (sovereignResult && sovereignResult.data) {
-                providerRef = sovereignResult.data.provider_reference || provider_reference;
-            }
-        } catch (sovereignError) {
-            console.error('Sovereign API error:', sovereignError.response?.data || sovereignError.message);
-            // Continue with local policy creation even if Sovereign API fails
+
+        const providerModel = new Provider(req.db);
+        const providerRecord = await providerModel.findByName(provider);
+        if (!providerRecord) {
+            return res.status(400).json({ error: `Provider '${provider}' not found` });
         }
-        
-        // Create policy in database
-        const policyData = {
+        if (!providerRecord.is_active) {
+            return res.status(400).json({ error: `Provider '${provider}' is not currently active` });
+        }
+
+        const adapter = getProviderAdapter(providerRecord);
+        const providerResult = await adapter.buyPolicy(policy_type, {
+            persona: personaData,
+            vehicle: vehicle || [],
+            cargoes: cargoes || [],
+            items: items || [],
+            trip: trip || {},
+            quote_price: quote_price || cost,
+            pin: pin || '7038',
+            payment_source: payment_source || 'wallet'
+        });
+
+        const providerRef = providerResult?.data?.provider_reference;
+        if (!providerRef) {
+            throw new Error(`Policy creation failed: ${providerRecord.display_name} did not return a provider reference`);
+        }
+
+        const result = await policyModel.create({
             name,
             provider,
             cost,
             frequency,
-            provider_reference: providerRef
-        };
-        const result = await policyModel.create(policyData, userId);
+            policy_type,
+            provider_reference: providerRef,
+            provider_payload: providerResult.data
+        }, userId);
         const policyId = result.insertId;
-        
-        // Deduct from wallet
+
         await wallet.debit(userId, cost, `Policy purchase: ${name}`, policyId);
-        
-        // Update policy status to active
         await policyModel.update(policyId, { status: 'active' });
-        
-        res.status(201).json({ 
-            message: 'Policy created and paid successfully', 
+
+        res.status(201).json({
+            message: 'Policy created and paid successfully',
             id: policyId,
             amount_paid: costNum,
             provider_reference: providerRef,
-            sovereign_response: sovereignResult ? sovereignResult.data : null
+            provider_response: providerResult.data
         });
     } catch (err) {
         if (err.message === 'Insufficient funds') {
@@ -465,10 +418,13 @@ router.get('/stats', authMiddleware, async (req, res) => {
  *         description: List of user policies
  */
 router.get('/user/:userId', authMiddleware, async (req, res) => {
+    if (req.userType !== 'admin') {
+        return res.status(403).json({ error: 'Admin access required' });
+    }
     const policyModel = new Policy(req.db);
     const page = parseInt(req.query.page) || 1;
     const size = parseInt(req.query.size) || 10;
-    
+
     try {
         const policies = await policyModel.getByUserId(req.params.userId, page, size);
         res.json({ policies });
@@ -495,7 +451,6 @@ router.get('/user/:userId', authMiddleware, async (req, res) => {
  *         description: List of provider policies
  */
 router.get('/provider/:providerId', authMiddleware, async (req, res) => {
-    const policyModel = new Policy(req.db);
     const Provider = require('../models/Provider');
     const providerModel = new Provider(req.db);
     const page = parseInt(req.query.page) || 1;
@@ -558,7 +513,11 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
         if (!policy) {
             return res.status(404).json({ error: 'Policy not found' });
         }
-        
+
+        if (req.userType !== 'admin' && policy.user_id !== req.user.id) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+
         await policyModel.update(req.params.id, { status: req.body.status });
         res.json({ message: 'Policy status updated successfully' });
     } catch (err) {
@@ -590,7 +549,11 @@ router.post('/:id/cancel', authMiddleware, async (req, res) => {
         if (!policy) {
             return res.status(404).json({ error: 'Policy not found' });
         }
-        
+
+        if (req.userType !== 'admin' && policy.user_id !== req.user.id) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+
         await policyModel.update(req.params.id, { status: 'cancelled' });
         res.json({ message: 'Policy cancelled successfully' });
     } catch (err) {
@@ -630,19 +593,51 @@ router.post('/:id/cancel', authMiddleware, async (req, res) => {
  */
 router.post('/:id/renew', authMiddleware, async (req, res) => {
     const policyModel = new Policy(req.db);
+    const wallet = new Wallet(req.db);
     try {
         const policy = await policyModel.getById(req.params.id);
         if (!policy) {
             return res.status(404).json({ error: 'Policy not found' });
         }
-        
+
+        if (req.userType !== 'admin' && policy.user_id !== req.user.id) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+
         const { start_date, end_date, premium } = req.body;
-        await policyModel.update(req.params.id, { 
-            start_date, 
+        const renewalCost = parseFloat(premium || policy.cost);
+
+        const balance = await wallet.getBalance(policy.user_id);
+        if (parseFloat(balance) < renewalCost) {
+            return res.status(400).json({
+                error: 'Insufficient funds',
+                required: renewalCost,
+                available: parseFloat(balance)
+            });
+        }
+
+        if (!policy.provider_reference) {
+            throw new Error('Cannot renew policy: missing provider reference');
+        }
+
+        const providerModel = new Provider(req.db);
+        const providerRecord = await providerModel.findByName(policy.provider_name);
+        if (!providerRecord) {
+            throw new Error(`Cannot renew policy: provider '${policy.provider_name}' not found`);
+        }
+
+        const adapter = getProviderAdapter(providerRecord);
+        await adapter.renewPolicy(policy.policy_type, policy.provider_reference, renewalCost);
+
+        await policyModel.update(req.params.id, {
+            start_date,
             end_date,
-            cost: premium,
+            cost: renewalCost,
             status: 'active'
         });
+
+        await wallet.debit(policy.user_id, renewalCost, `Policy renewal: ${policy.the_name}`, policy.id);
+
         res.json({ message: 'Policy renewed successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });

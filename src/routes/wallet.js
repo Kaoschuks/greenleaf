@@ -116,7 +116,7 @@ router.post('/credit', authMiddleware, requireAdmin, async (req, res) => {
  *       400:
  *         description: Error debiting wallet
  */
-router.post('/debit', authMiddleware, async (req, res) => {
+router.post('/debit', authMiddleware, requireAdmin, async (req, res) => {
   const wallet = new Wallet(req.db);
   const { amount, description, policyId } = req.body;
   try {

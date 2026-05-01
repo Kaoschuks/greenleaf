@@ -21,25 +21,24 @@ const Wallet = require('../models/Wallet');;
  *         description: Webhook processed successfully
  */
 router.post('/paystack', async (req, res) => {
-  //const secret = process.env.PAYSTACK_SECRET_KEY;
+  const secret = process.env.PAYSTACK_SECRET_KEY;
 
-  /*const hash = crypto
+  const hash = crypto
     .createHmac('sha512', secret)
-    .update(req.body)
-    .digest('hex');*/
+    .update(JSON.stringify(req.body))
+    .digest('hex');
 
-  //const signature = req.headers['x-paystack-signature'];
+  const signature = req.headers['x-paystack-signature'];
 
-  //if (hash !== signature) return res.status(401).send('Unauthorized');
+  if (hash !== signature) return res.status(401).send('Unauthorized');
 
-  console.log(req.body);
   const event = req.body;
 
   if (event.event === 'charge.success') {
     const data = event.data;
     const userId = data.metadata?.userId;
     const desc = data.metadata?.desc;
-    const amount = data.amount / 104;
+    const amount = data.amount / 100;
 
     const wallet = new Wallet(req.db);
     try {

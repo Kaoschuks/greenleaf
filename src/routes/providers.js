@@ -11,13 +11,11 @@ const router = express.Router();
  * /providers:
  *   get:
  *     summary: Get all providers
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of providers
  */
-router.get('/', authMiddleware, async (req, res) => {
+router.get('/', async (req, res) => {
     const providerModel = new Provider(req.db);
     try {
         const providers = await providerModel.findAll();

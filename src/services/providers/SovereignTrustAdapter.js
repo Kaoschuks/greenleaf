@@ -50,6 +50,7 @@ class SovereignTrustAdapter extends BaseProviderAdapter {
                 },
                 data
             });
+            // console.log(`[SovereignTrust] ${method} ${endpoint} response:`, JSON.stringify(response.data));
             return response.data;
         } catch (err) {
             console.error(`Sovereign Trust API error [${method} ${endpoint}]:`, err.response?.data || err.message);
@@ -98,6 +99,44 @@ class SovereignTrustAdapter extends BaseProviderAdapter {
 
     async getWalletHistory() {
         return this._request('GET', '/wallet-history');
+    }
+
+    async getVehicleBrands() {
+        return this._request('GET', '/vehicle-brands');
+    }
+
+    async getVehicleModels(brandId) {
+        // ST collection has a copy-paste error for this endpoint — update path if ST returns 404
+        return this._request('GET', `/vehicle-brand-types?brand_id=${brandId}`);
+    }
+
+    async getMyClaims() {
+        return this._request('GET', '/my-claims');
+    }
+
+    async makeClaim(data) {
+        return this._request('POST', '/make-claim', data);
+    }
+
+    async trackClaim(claimNumber) {
+        return this._request('POST', '/track-claim', { claim_number: claimNumber });
+    }
+
+    async getQuote(policyType, data) {
+        switch (policyType) {
+            case 'vehicle':
+                return this._request('POST', '/get-vehicle-quote', data);
+            case 'marine':
+                return this._request('POST', '/get-marine-quote', data);
+            case 'allrisk':
+                return this._request('POST', '/get-all-risk-quote', data);
+            case 'travel':
+                return this._request('POST', '/get-travel-quote', data);
+            case 'swiss':
+                return this._request('POST', '/get-swiss-quote', data);
+            default:
+                throw new Error(`No quote endpoint for policy type: ${policyType}`);
+        }
     }
 }
 

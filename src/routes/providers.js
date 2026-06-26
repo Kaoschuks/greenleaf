@@ -119,6 +119,57 @@ router.get('/name/:name', authMiddleware, async (req, res) => {
     }
 });
 
+router.get('/types', (_req, res) => {
+    const policyTypes = [
+        {
+            id: 'vehicle',
+            name: 'Vehicle Insurance',
+            description: 'Comprehensive and third-party motor insurance',
+            requiredFields: {
+                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address'],
+                vehicle: ['make', 'model', 'year', 'registration_number', 'chassis_number', 'engine_number', 'vehicle_value', 'policy_type']
+            }
+        },
+        {
+            id: 'marine',
+            name: 'Marine Insurance',
+            description: 'Marine cargo and hull insurance',
+            requiredFields: {
+                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address'],
+                cargoes: ['period', 'policy_type', 'description', 'value', 'loading_port', 'discharge_port']
+            }
+        },
+        {
+            id: 'allrisk',
+            name: 'All Risk Insurance',
+            description: 'Personal all risk insurance for electronics and valuables',
+            requiredFields: {
+                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address'],
+                items: ['item', 'value', 'period', 'serial', 'imei']
+            }
+        },
+        {
+            id: 'travel',
+            name: 'Travel Insurance',
+            description: 'Domestic and international travel insurance',
+            requiredFields: {
+                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address'],
+                trip: ['trip_duration', 'travel_mode', 'place_departure', 'place_arrival']
+            }
+        },
+        {
+            id: 'swiss',
+            name: 'Swiss Life Insurance',
+            description: 'Swiss life insurance policy',
+            requiredFields: {
+                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address']
+            }
+        }
+    ];
+
+    res.json({ types: policyTypes });
+});
+
 /**
  * @swagger
  * /providers/{id}:
@@ -391,57 +442,6 @@ router.post('/:id/sync', authMiddleware, async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-});
-
-router.get('/types', authMiddleware, (_req, res) => {
-    const policyTypes = [
-        {
-            id: 'vehicle',
-            name: 'Vehicle Insurance',
-            description: 'Comprehensive and third-party motor insurance',
-            requiredFields: {
-                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address'],
-                vehicle: ['make', 'model', 'year', 'registration_number', 'chassis_number', 'engine_number', 'vehicle_value', 'policy_type']
-            }
-        },
-        {
-            id: 'marine',
-            name: 'Marine Insurance',
-            description: 'Marine cargo and hull insurance',
-            requiredFields: {
-                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address'],
-                cargoes: ['period', 'policy_type', 'description', 'value', 'loading_port', 'discharge_port']
-            }
-        },
-        {
-            id: 'allrisk',
-            name: 'All Risk Insurance',
-            description: 'Personal all risk insurance for electronics and valuables',
-            requiredFields: {
-                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address'],
-                items: ['item', 'value', 'period', 'serial', 'imei']
-            }
-        },
-        {
-            id: 'travel',
-            name: 'Travel Insurance',
-            description: 'Domestic and international travel insurance',
-            requiredFields: {
-                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address'],
-                trip: ['trip_duration', 'travel_mode', 'place_departure', 'place_arrival']
-            }
-        },
-        {
-            id: 'swiss',
-            name: 'Swiss Life Insurance',
-            description: 'Swiss life insurance policy',
-            requiredFields: {
-                persona: ['first_name', 'last_name', 'email', 'phone', 'gender', 'house_address']
-            }
-        }
-    ];
-
-    res.json({ types: policyTypes });
 });
 
 module.exports = router;

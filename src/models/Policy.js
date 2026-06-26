@@ -1,6 +1,13 @@
 const { PolicyStatus, PolicyFrequency } = require('../utils/enums');
 const { getCurrentDateTime } = require('../utils/utils');
 
+function parseRow(row) {
+    if (row && row.provider_payload && typeof row.provider_payload === 'string') {
+        try { row.provider_payload = JSON.parse(row.provider_payload); } catch (_) {}
+    }
+    return row;
+}
+
 class Policy {
     constructor(db) {
         this.db = db;
@@ -38,7 +45,7 @@ class Policy {
              ORDER BY p.created_at DESC LIMIT ${parseInt(size)} OFFSET ${parseInt(offset)}`,
             [userId]
         );
-        return rows;
+        return rows.map(parseRow);
     }
 
     async getAll(page = 1, size = 10, providerName = null) {
@@ -58,7 +65,7 @@ class Policy {
         query += ` ORDER BY p.created_at DESC LIMIT ${parseInt(size)} OFFSET ${parseInt(offset)}`;
 
         const [rows] = await this.db.execute(query, params);
-        return rows;
+        return rows.map(parseRow);
     }
 
     async getById(policyId) {
@@ -71,7 +78,7 @@ class Policy {
              WHERE p.id = ?`,
             [policyId]
         );
-        return rows[0];
+        return parseRow(rows[0]);
     }
 
     async update(policyId, policyData) {
